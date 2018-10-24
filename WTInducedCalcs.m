@@ -4,7 +4,7 @@ function [a_out, adash_out, phi, Cn, Ct] = WTInducedCalcs(a_in, adash_in, V0, om
 
 %% Set constants
 rho = 1.225;        %density of air in kg/m^3
-mu = 18.81e-6;      %kinematic viscosity in UNITS!!!!
+mu = 18.81e-6;      %kinematic viscosity in Pa.s
 
 error_tol = .0001;  % setting allowable error
 error = error_tol + 1; %set first error to initiate while loop
@@ -41,8 +41,8 @@ while error >= error_tol && i <101
     %% If error greater than allowable error apply relaxation factor,
     %else the solution has been found and while loop can be broken
     if error >= error_tol
-        a_in = a_out; %0.1*(a_out - a_in) + a_in;
-        adash_in = adash_out;
+        a_in = 0.1*(a_out - a_in) + a_in;
+        adash_in = 0.1*(adash_out - adash_in) + adash_in;
     else
         break
     end
@@ -52,7 +52,7 @@ end
 %% If counter exceed 100 set a' to zero and solve for a
 
 if i > 100
-    a = 0;
+    a_in = 0;
     adash_out = 0;
     while error >= error_tol
         %% Calculate  angles
@@ -81,7 +81,8 @@ if i > 100
         %% If error greater than allowable error apply relaxation factor,
         % else the solution has been found and while loop can be broken
         if error >= error_tol
-            a_in = 0.1*(a_out - a_in) * a_in;
+            a_in = 0.1*(a_out - a_in) + a_in;
+            adash_in = 0.1*(adash_out - adash_in) + adash_in;
         else
             break
         end
