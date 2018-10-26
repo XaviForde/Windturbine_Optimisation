@@ -5,7 +5,7 @@ function [Diff] = WTVelocityRange(Parameters, A, k, omega, chord_mean, TipRadius
 
 %% Constants
 rho = 1.225;        %density of air in kg/m^3
-Area = (TipRadius^2)*(pi);           %Area in m^2
+
 %% Calculate total tangential moment for each speed
 
 delta_V0 = 1;
@@ -18,8 +18,6 @@ Power = zeros(length(V0), 1);   %Initialise power vector for each wind speed
 P_speed = zeros(length(V0)-1, 1);           %Initialise vector of speed probablilities
 AEP_speed = zeros(length(V0)-1, 1);         %Initialise vector of annual power at each speed
 Power_midpoint = zeros(length(V0)-1, 1);    %Initialise vector of power inbetween speeds
-AEP_speed_ideal = zeros(length(V0)-1, 1);
-Power_ideal = zeros(length(V0)-1, 1);
 
 %% Calculate power for each speed
 
@@ -37,17 +35,16 @@ for i = 2:length(V0)
     P_speed(i-1) = exp(-(V0(i-1)/A)^k) - exp(-(V0(i)/A)^k); %Calculate probability of speed between Vi and Vi+1
     
     Power_midpoint(i-1) = 0.5*(Power(i-1) + Power(i));          %Power at mid point is average of lower and upper bounds
-    Power_ideal(i-1) = (16/27) * 0.5*rho*(((V0(i-1)+V0(i))/2)^3)*Area;  %Theoretical maximum power defined by Betz limit
+    Power_ideal = (16/27) * 0.5*rho*(((V0(i-1)+V0(i))/2)^3)*A;  %Theoretical maximum power defined by Betz limit
     
     AEP_speed(i-1) = Power_midpoint(i-1) * P_speed(i-1) * 8760;         %Calculate predictied anual power generated at each windspeed range
-    AEP_speed_ideal(i-1) = Power_ideal(i-1) * P_speed(i-1) * 8760;   %Calculate the ideal anual power generated at each windspeed range
+    AEP_speed_ideal(i-1) = Power_midpoint(i-1) * P_speed(i-1) * 8760;   %Calculate the ideal anual power generated at each windspeed range
     
 end
 
 %AEP = sum(AEP_speed);
 %AEP_ideal = sum(AEP_speed_ideal);
-%Diff = AEP_ideal - AEP;
-%assert(Diff > 0, 'Error!Predicted power greater than ideal.')
+%Diff = 
 Diff = [Power_midpoint, Power_ideal, P_speed, AEP_speed, AEP_speed_ideal];
 
 end
