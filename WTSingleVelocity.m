@@ -1,4 +1,4 @@
-function [MT_local, MN, output] = WTSingleVelocity(V0, theta0, theta_twist, chord_mean, chord_grad, TipRadius, RootRadius, omega, B)
+function [MT, MN] = WTSingleVelocity(V0, theta0, theta_twist, chord_mean, chord_grad, TipRadius, RootRadius, omega, B)
 %2: WHOLE ROTOR - loop WTInducedCalcs to find the values for all radii,
 %then integrate these to get the normal and tangential moment at the blade
 %root.
@@ -24,8 +24,7 @@ for i = 1:length(y)
     theta_local = theta0 + y(i)*theta_twist;
     
     %Calculate Cn and Ct for the local element
-    [a_out, adash_out, phi, Cn, Ct] = WTInducedCalcs(0, 0, V0, omega, y(i), theta_local, chord_local , B);
-    output(i,:) = [a_out, adash_out, phi, Cn, Ct];
+    [a_out, adash_out, ~, Cn, Ct] = WTInducedCalcs(0, 0, V0, omega, y(i), theta_local, chord_local , B);
     
     % Calculate Relative Velocity  %%%%%Future work: can this be pulled form previous function?
     V_rel = ((V0*(1-a_out))^2 + ((omega*y(i))*(1 + adash_out))^2)^.5;
