@@ -1,7 +1,20 @@
-function [Diff] = WTVelocityRange(Parameters, A, k, omega, chord_mean, TipRadius, RootRadius, B, MinV0, MaxV0)
+function [Diff] = WTVelocityRange(Parameters)
 %3: ANNUAL ENERGY - loop WTSingleVelocity to find the moments across the
 %entire velocity range. Combine this with the frequency information to get
 %the AEP. Parameters = [theta0, theta_twist, chord_grad]
+
+disp(strcat('Theta0: ' , num2str(Parameters(1)*180/pi),'  Twist: ', num2str(Parameters(2)*180/pi), ' Taper: '  ,num2str(Parameters(3))))
+
+%% Setting as constants%%%%
+A = 7;
+k = 1.8;
+omega = 3.14;
+chord_mean = 1;
+TipRadius = 20;
+RootRadius = 1;
+B = 3;
+MinV0 = 5;
+MaxV0 = 25;
 
 %% Constants
 rho = 1.225;        %density of air in kg/m^3
@@ -44,10 +57,12 @@ for i = 2:length(V0)
     
 end
 
-%AEP = sum(AEP_speed);
-%AEP_ideal = sum(AEP_speed_ideal);
-%Diff = AEP_ideal - AEP;
-%assert(Diff > 0, 'Error!Predicted power greater than ideal.')
-Diff = [Power_midpoint, Power_ideal, P_speed, AEP_speed, AEP_speed_ideal];
+
+AEP = sum(AEP_speed);
+AEP_ideal = sum(AEP_speed_ideal);
+Diff = AEP_ideal - AEP;
+assert(Diff > 0, 'Error!Predicted power greater than ideal.')
+%assert(Diff < AEP_ideal, 'Error with Diff!')
+%Diff = [Power_midpoint, Power_ideal, P_speed, AEP_speed, AEP_speed_ideal];
 
 end

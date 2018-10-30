@@ -9,10 +9,10 @@ rho = 1.225;        %density of air in kg/m^3
 %% Set up geometry
 y = 1.5:1:19.5;   %Vector of local radii (elements) (in m)
 y_delta = y(2) - y(1);  %delta is difference between adjacent elements
-R = TipRadius - RootRadius;
+%disp(strcat('Root:',num2str(RootRadius), 'and Tip:', num2str(TipRadius)))
+R = TipRadius; %- RootRadius;
 
 %% Set up empty outputs arrays to improve efficiency
-output = zeros(length(y),5);
 MN_local = zeros(length(y),1);
 MT_local = zeros(length(y),1);
 %% 2: Calculate individual element moment both in plane and normal
@@ -20,8 +20,9 @@ MT_local = zeros(length(y),1);
 for i = 1:length(y)
     
     %Calculate local chord and angle of attack
-    chord_local = chord_mean + (y(i) - (R/2))*chord_grad;
-    theta_local = theta0 + y(i)*theta_twist;
+    chord_local = chord_mean + ((y(i)) - (R/2))*chord_grad;   %Subtract 1 from y as blade starts at y=1
+    assert(chord_local >= 0 && chord_local <= 2, strcat('Error in chord length! Chord length = ', num2str(chord_local)))
+    theta_local = theta0 + (y(i))*theta_twist;    %Subtract 1 from y as blade starts at y=1
     
     %Calculate Cn and Ct for the local element
     [a_out, adash_out, ~, Cn, Ct] = WTInducedCalcs(0, 0, V0, omega, y(i), theta_local, chord_local , B);

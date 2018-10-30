@@ -9,6 +9,8 @@ persistent FL FD
 %For alpha > 20deg it is an algebraic method based on the methods described
 %in the notes and Leishman.
 
+%disp('Start CL,CD Calcs')
+
 Alpha=Alpha*180/pi; %Convert from radians into degrees.
 if Re < 10000 %Lower Limit of Experimental Data
     Re = 10000;
