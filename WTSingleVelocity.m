@@ -3,14 +3,14 @@ function [MT, MN] = WTSingleVelocity(V0, theta0, theta_twist, chord_mean, chord_
 %then integrate these to get the normal and tangential moment at the blade
 %root.
 
-%% Set constants       %%%%% Future work: can these be set as globals?
+%% Set constants      
 rho = 1.225;        %density of air in kg/m^3
 
 %% Set up geometry
 y = 1.5:1:19.5;   %Vector of local radii (elements) (in m)
 y_delta = y(2) - y(1);  %delta is difference between adjacent elements
-%disp(strcat('Root:',num2str(RootRadius), 'and Tip:', num2str(TipRadius)))
-R = TipRadius; %- RootRadius;
+
+R = TipRadius;
 
 %% Set up empty outputs arrays to improve efficiency
 MN_local = zeros(length(y),1);
@@ -20,14 +20,14 @@ MT_local = zeros(length(y),1);
 for i = 1:length(y)
     
     %Calculate local chord and angle of attack
-    chord_local = chord_mean + ((y(i)) - (R/2))*chord_grad;   %Subtract 1 from y as blade starts at y=1
+    chord_local = chord_mean + ((y(i)) - (R/2))*chord_grad;   
     assert(chord_local >= 0 && chord_local <= 2, strcat('Error in chord length! Chord length = ', num2str(chord_local)))
-    theta_local = theta0 + (y(i))*theta_twist;    %Subtract 1 from y as blade starts at y=1
+    theta_local = theta0 + (y(i))*theta_twist;    
     
     %Calculate Cn and Ct for the local element
     [a_out, adash_out, ~, Cn, Ct] = WTInducedCalcs(0, 0, V0, omega, y(i), theta_local, chord_local , B);
     
-    % Calculate Relative Velocity  %%%%%Future work: can this be pulled form previous function?
+    % Calculate Relative Velocity 
     V_rel = ((V0*(1-a_out))^2 + ((omega*y(i))*(1 + adash_out))^2)^.5;
     
     %Calculate the local moment in normal and tangential (torque) directions

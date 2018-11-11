@@ -55,22 +55,20 @@ if i > 100
     a_in = 0;
     adash_out = 0;
     while error >= error_tol
-        i = i+1;
-        %Trying to find where Optimiser gets stuck
-        if rem(i, 10000) == 0
-            disp(strcat('i = ', num2str(i)))
-            disp(strcat('Alpha = ', num2str(alpha*180/pi), ' Theta = ', num2str(theta*180/pi), ' a = ', num2str(a_in)))
+        
+        %% If counter reaches 500 the error tolerance
+        % can be decreased to get a result. 
+        
+        i = i+1;    %Increase counter
+        
+        if i >= 500             %Decrease error tol after 500 interations
+            error_tol = 0.01;
         end
         %% Calculate  angles
         phi = atan(((1-a_in)*V0) / ((1)*omega*y));
         
         alpha = phi - theta;
-        
-        %%%%%%%%%%% After 50000 iterations just set alpha to a solvable value
-        if i > 50000
-            alpha = 11*pi/180;
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+             
         
         %% Calculate Reynolds number
         V_rel = ((V0*(1-a_in))^2 + ((omega*y)*(1))^2)^.5;
@@ -79,13 +77,7 @@ if i > 100
         
         %% Get non-dimensional lift and drag coefficients and convert
         [Cl, Cd] = ForceCoefficient(alpha, Re);
-        
-        %%%%%%%%%%%% Every 10000 iterations interrogate CL and CD
-%         if rem(i, 10000) == 0
-%             disp(strcat('C_LIFT: ', num2str(Cl), '  C_DRAG: ', num2str(Cd), '  C_NORM: ', num2str(Cn), 'RE = ', num2str(RE)));
-%         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
+               
         Cn = Cl*cos(phi) + Cd*sin(phi);         %Normal Force Coefficient
         Ct = Cl*sin(phi) - Cd*cos(phi);         %Tangential Force Coefficient
         
@@ -99,12 +91,7 @@ if i > 100
         %% If error greater than allowable error apply relaxation factor,
         % else the solution has been found and while loop can be broken
         if error >= error_tol
-            if i < 10000
             a_in = 0.1*(a_out - a_in) + a_in;  %Relaxation facto k=.1 added
-            else
-                a_in = 0.05*(a_out - a_in) + a_in; %Add more relaxation if not converging
-            end
-            
         else
             break
         end

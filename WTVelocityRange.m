@@ -3,8 +3,6 @@ function [Diff] = WTVelocityRange(Parameters)
 %entire velocity range. Combine this with the frequency information to get
 %the AEP. Parameters = [theta0, theta_twist, chord_grad]
 
-disp(strcat('Theta0: ' , num2str(Parameters(1)*180/pi),'  Twist: ', num2str(Parameters(2)*180/pi), ' Taper: '  ,num2str(Parameters(3))))
-
 %% Setting as constants%%%%
 A = 7;
 k = 1.8;
@@ -62,7 +60,5 @@ AEP = sum(AEP_speed);
 AEP_ideal = sum(AEP_speed_ideal);
 Diff = AEP_ideal - AEP;
 assert(Diff > 0, 'Error!Predicted power greater than ideal.')
-%assert(Diff < AEP_ideal, 'Error with Diff!')
-%Diff = [Power_midpoint, Power_ideal, P_speed, AEP_speed, AEP_speed_ideal];
 
 end
