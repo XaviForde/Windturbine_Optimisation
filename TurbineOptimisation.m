@@ -1,4 +1,4 @@
-function [] = TurbineOptimisation()
+function [x] = TurbineOptimisation()
 %%%%Script to find the optimal solution for theta0, theta_twist and 
 %chrod gradient
 
@@ -6,7 +6,7 @@ function [] = TurbineOptimisation()
 opts = optimset('fminsearch');
 opts.Display = 'iter'; %What to display in command window
 opts.TolX = 0.001; %Tolerance on the variation in the parameters
-opts.TolFun = 1e6;  %Tolerance on the error
+opts.TolFun = 1e7;  %Tolerance on the error
 opts.MaxFunEvals = 150; %Max number of iterations
 
 %fminsearch inputs: (function, initial guess, lower limits on variables, 
@@ -18,9 +18,9 @@ opts.MaxFunEvals = 150; %Max number of iterations
 % Limit for chord grad set so there is at least 20cm chord at root for
 % attatchment and so chord is positive at R = 20 
 
-[x] = fminsearchbnd(@WTVelocityRange, [5*pi/180 -.3*pi/180 .05], [-20*pi/180 -2.36*pi/180 -0.105], [20*pi/180 2.36*pi/180 (8/95)], opts);
+[x] = fminsearchbnd(@WTVelocityRange, [5*pi/180 -.3*pi/180 .0], [-20*pi/180 -2.36*pi/180 -0.105], [20*pi/180 2.36*pi/180 (8/95)], opts);
 
-disp(strcat('OPTIMAL VALUES: Theta0 = ', num2str(x(1)*180/pi), ' Twist Rate = ', num2str(x(2)*180/pi), ' Taper Rate = ', num2str(x(3))))
+%disp(strcat('OPTIMAL VALUES: Theta0 = ', num2str(x(1)*180/pi), ' Twist Rate = ', num2str(x(2)*180/pi), ' Taper Rate = ', num2str(x(3))))
 
 %% Check bending moment does not Exceed 0.5MNm
 %WTSingleVelocity inputs => V0, theta0, theta_twist, chord_mean, chord_grad, TipRadius, RootRadius, omega, B

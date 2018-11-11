@@ -1,4 +1,4 @@
-function [MT, MN] = WTSingleVelocity(V0, theta0, theta_twist, chord_mean, chord_grad, TipRadius, RootRadius, omega, B)
+function [MT, MN, MT_local, MN_local] = WTSingleVelocity(V0, theta0, theta_twist, chord_mean, chord_grad, TipRadius, RootRadius, omega, B)
 %2: WHOLE ROTOR - loop WTInducedCalcs to find the values for all radii,
 %then integrate these to get the normal and tangential moment at the blade
 %root.
