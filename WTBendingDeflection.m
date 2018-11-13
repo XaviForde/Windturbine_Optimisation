@@ -7,7 +7,7 @@ R = 20;
 RootRadius = 1;
 B = 3;
 V0 = 25;
-rho = 1.225; 
+rho = 1.225;
 
 %% Set up geometry
 y = 1:1:20;   %Vector of local radii (elements) (in m)
@@ -45,10 +45,18 @@ for i = 1:N-1
     BeamTheta_local(i+1) = BeamTheta_local(i) + 0.5*(k(i+1) + k(i))*(y(i+1) - y(i));
 end
 
-
-
 for i = 1:N-1
     u(i+1) = u(i) + BeamTheta_local(i)*(y(i+1)-y(i)) + ((1/6)*k(i+1) + (1/3)*k(i))*(y(i+1)-y(i))^2;
 end
 
 tip_deflection = u(end);
+
+y2(1)= 0;
+for i = 2:N
+    y2(i) = y(i-1) + sqrt(1 - (u(i)-u(i-1))^2);
+end
+figure()
+plot(y2,u)
+xlim([0 20])
+ylim([0 20])
+pbaspect([1 1 1])

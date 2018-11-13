@@ -40,15 +40,15 @@ eff_theta0 = ((Betzlimit - dist2betz_theta0) / Betzlimit)*100;
 eff_theta_twist = ((Betzlimit - dist2betz_theta_twist) / Betzlimit)*100;
 eff_chord_grad = ((Betzlimit - dist2betz_chord_grad) / Betzlimit)*100;
 %% Plotting results
-figure(1)
+figure()
 plot((theta0.*(180/pi)),eff_theta0)
 xlabel('Theta at Root (Degrees)')
 ylabel('Efficiency (% of Betz Limit)')
-figure(2)
+figure()
 plot((theta_twist.*(180/pi)),eff_theta_twist)
 xlabel('Rate of Angular Twist in (Degrees/meter)')
 ylabel('Efficiency (% of Betz Limit)')
-figure(3)
+figure()
 plot(chord_grad, eff_chord_grad)
 xlabel('Rate of Chord Change Along Span')
 ylabel('Efficiency (% of Betz Limit)')
