@@ -26,7 +26,7 @@ for i = 1:length(y)
     
     %Calculate Cn and Ct for the local element
     [a_out, adash_out, ~, Cn, Ct] = WTInducedCalcs(0, 0, V0, omega, y(i), theta_local, chord_local , B);
-    
+%   disp(strcat('Aout: ' , num2str(a_out)))
     % Calculate Relative Velocity 
     V_rel = ((V0*(1-a_out))^2 + ((omega*y(i))*(1 + adash_out))^2)^.5;
     
@@ -37,7 +37,6 @@ for i = 1:length(y)
 end
 
 %% Integrate the moments to find totals
-
 MN = sum(MN_local);
 MT = sum(MT_local);
 

@@ -5,7 +5,7 @@ function [a_out, adash_out, phi, Cn, Ct] = WTInducedCalcs(a_in, adash_in, V0, om
 %% Set constants
 rho = 1.225;        %density of air in kg/m^3
 mu = 18.81e-6;      %kinematic viscosity in Pa.s
-
+R = 20;
 error_tol = .0001;  % setting allowable error
 error = error_tol + 1; %set first error to initiate while loop
 
@@ -16,9 +16,11 @@ while error >= error_tol && i <101
     
     %% Calculate  angles
     phi = atan(((1-a_in)*V0) / ((1+adash_in)*omega*y));
-    
     alpha = phi - theta;
     
+    %% Caluclate f and F for Prandtl tip loss factor (Hansen chapter 6)
+    f = (B/2) * ((R-y) / (y * sin(phi)));
+    F = (2/pi) * acos(exp(-f));
     %% Calculate Reynolds number
     V_rel = ((V0*(1-a_in))^2 + ((omega*y)*(1 + adash_in))^2)^.5;
     
@@ -29,11 +31,15 @@ while error >= error_tol && i <101
     Cn = Cl*cos(phi) + Cd*sin(phi);         %Normal Force Coefficient
     Ct = Cl*sin(phi) - Cd*cos(phi);         %Tangential Force Coefficient
     
-    %% Calculate new values for a and a'
+    %% Calculate new values for a and a' for no tip loss:
     sigma = (B*chord) / (2*pi()*y);
     a_out = 1 / (((4*sin(phi)^2)/(sigma*Cn)) + 1);
     adash_out = 1 / (((4*sin(phi)*cos(phi))/(sigma*Ct)) - 1);
     
+%     %% Calculate a and a' with tip loss
+%     sigma = (B*chord) / (2*pi()*y);
+%     a_out = 1 / (((4*F*sin(phi)^2)/(sigma*Cn)) + 1);
+%     adash_out = 1 / (((4*F*sin(phi)*cos(phi))/(sigma*Ct)) - 1);
     %% Calculate error
     error = abs(a_out - a_in) + abs(adash_out - adash_in);
     
@@ -57,33 +63,37 @@ if i > 100
     while error >= error_tol
         
         %% If counter reaches 500 the error tolerance
-        % can be decreased to get a result. 
+        % can be decreased to get a result.
         
         i = i+1;    %Increase counter
         
-        if i >= 500             %Decrease error tol after 500 interations
+        if i >= 100             %Decrease error tol after 500 interations
             error_tol = 0.01;
         end
         %% Calculate  angles
         phi = atan(((1-a_in)*V0) / ((1)*omega*y));
-        
         alpha = phi - theta;
-             
+        %% Caluclate f for Prandtl tip loss factor (Hansen chapter 6)
+        f = (B/2) * ((R-y) / (y * sin(phi)));
+        F = (2/pi) * acos(exp(-f));
         
         %% Calculate Reynolds number
         V_rel = ((V0*(1-a_in))^2 + ((omega*y)*(1))^2)^.5;
-        
         Re = (rho*V_rel*chord) / mu;
         
         %% Get non-dimensional lift and drag coefficients and convert
         [Cl, Cd] = ForceCoefficient(alpha, Re);
-               
+        
         Cn = Cl*cos(phi) + Cd*sin(phi);         %Normal Force Coefficient
         Ct = Cl*sin(phi) - Cd*cos(phi);         %Tangential Force Coefficient
         
-        %% Calculate new values for a and a'
+        %% Calculate new values for a and a' with no tip loss:
         sigma = (B*chord) / (2*pi*y);
         a_out = 1 / (((4*sin(phi)^2)/(sigma*Cn)) + 1);
+        
+%         %% Calculate a and a' with tip loss
+%         sigma = (B*chord) / (2*pi()*y);
+%         a_out = 1 / (((4*F*sin(phi)^2)/(sigma*Cn)) + 1);
         
         %% Calculate error
         error = abs(a_out - a_in);

@@ -25,7 +25,7 @@ text(2013,200, 'Total', 'color', [1 1 1], 'Fontsize', 14)%, 'FontWeight', 'bold'
 print -depsc C:\Users\xav_m\OneDrive\Documents\XAVI\University\Final_Year\HELICOPTERS\Coursework\Windturbine_Optimisation\Report\Figures\ukGen
 
 mean_G = mean(growth_G);
-mean_W = mean(growth_W)
+mean_W = mean(growth_W);
 mean_G = mean_G * ones(1,length(growth_G));
 mean_W = mean_W * ones(1,length(growth_G));
 figure()

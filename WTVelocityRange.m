@@ -57,11 +57,11 @@ end
 AEP = sum(AEP_speed);
 AEP_ideal = sum(AEP_speed_ideal);
 
-tip_deflection = WTBendingDeflection(Parameters(1), Parameters(2), Parameters(3));
-disp(strcat('Tip deflection: ', num2str(tip_deflection)));
-if  tip_deflection > 3
-    AEP = 0;
-end
+% [tip_deflection, M_root] = WTBendingDeflection(Parameters(1), Parameters(2), Parameters(3));
+% disp(strcat('Tip deflection: ', num2str(tip_deflection), '  M_root: ', num2str(M_root)));
+% if  tip_deflection > 3 || M_root > 0.5e6
+%     AEP = 0;
+% end
 Diff = AEP_ideal - AEP;
 assert(Diff > 0, 'Error!Predicted power greater than ideal.')
 

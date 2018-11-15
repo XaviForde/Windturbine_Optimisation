@@ -18,9 +18,9 @@ opts.MaxFunEvals = 150; %Max number of iterations
 % Limit for chord grad set so there is at least 20cm chord at root for
 % attatchment and so chord is positive at R = 20 
 
-[x] = fminsearchbnd(@WTVelocityRange, [5*pi/180 -.3*pi/180 .0], [-20*pi/180 -2.36*pi/180 -0.105], [20*pi/180 2.36*pi/180 (8/95)], opts);
+[x] = fminsearchbnd(@WTVelocityRange, [5*pi/180 -.3*pi/180 -.03], [-20*pi/180 -2.36*pi/180 -0.105], [20*pi/180 2.36*pi/180 .07], opts);
 
-%disp(strcat('OPTIMAL VALUES: Theta0 = ', num2str(x(1)*180/pi), ' Twist Rate = ', num2str(x(2)*180/pi), ' Taper Rate = ', num2str(x(3))))
+disp(strcat('OPTIMAL VALUES: Theta0 = ', num2str(x(1)*180/pi), ' Twist Rate = ', num2str(x(2)*180/pi), ' Taper Rate = ', num2str(x(3))))
 
 %% Check bending moment does not Exceed 0.5MNm
 %WTSingleVelocity inputs => V0, theta0, theta_twist, chord_mean, chord_grad, TipRadius, RootRadius, omega, B
